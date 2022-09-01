@@ -1,7 +1,6 @@
 {
   "description": "merchant php sdk",
   "name": "didipay/merchant-php-sdk",
-  "version": "1.0.3",
   "type": "library",
   "homepage": "https://didipay.didiglobal.com/developer/docs/en/",
   "license": "MIT",
