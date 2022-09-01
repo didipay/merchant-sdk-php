@@ -45,7 +45,7 @@ After you install the library with Composer, the library is added automatically 
   ```shell
   {
     "require": {
-        "didipay/merchant-php-sdk": "^${merchant-sdk-version}}"
+        "didipay/merchant-php-sdk": "^${merchant-sdk-version}"
     }
   }
   ```
