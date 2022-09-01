@@ -1,0 +1,17 @@
+*.DS_Store
+/vendor
+sftp-config.json
+/*.php
+!.php-cs-fixer.dist.php
+/.idea
+/coverage
+/.split
+/composer.lock
+.php-cs-fixer.cache
+.phpunit.result.cache
+cghooks.lock
+docs/dist/
+docs/.vuepress/.temp/
+docs/.vuepress/.cache/
+.vercel
+.phplint-cache
