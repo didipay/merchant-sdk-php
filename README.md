@@ -1,4 +1,4 @@
-## Didipay payment merchant php dsk
+## Didipay payment merchant php SDK
 
 Official website (https://didipay.didiglobal.com)
 
