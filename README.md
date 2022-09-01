@@ -1,19 +1,93 @@
-99pay支付商户php sdk
+## Didipay payment merchant php dsk
 
-官网(https://didipay.didiglobal.com/developer/docs/en/)
+Official website (https://didipay.didiglobal.com)
 
-## 签名流程
+## Dependencies
+Php 5.6.0 or higher is required
 
-获取所有请求参数，不包括字节类型参数，如文件、字节流，剔除sign字段，并按照第一个字符的键值ASCII码递增排序（字母升序排序），如果遇到相同字符则按照第二个字符的键值ASCII码递增排序，以此类推。
+ext-openssl is required
 
-筛选并排序
+ext-curl is required
 
-拼接：将排序后的参数与其对应值，组合成“参数=参数值”的格式，并且把这些参数用&字符连接起来，此时生成的字符串为待签名字符串。
+ext-json is required
 
-调用签名算法：使用各自语言对应的SHA256WithRSA签名函数利用商户私钥对待签名字符串进行签名，并进行Base64编码。
-把生成的签名赋值给sign参数，拼接到请求参数中。
+## Signature process
 
-密钥格式问题
+Get all request parameters, excluding byte-type parameters, such as files and byte streams, remove the sign field, and sort them in ascending order according to the key-value ASCII code of the first character (in ascending alphabetical order). The two-character key-value ASCII codes are sorted in ascending order, and so on.
 
-Java语言使用的私钥为PKCS8编码格式，非Java语言使用的私钥为PKCS1格式。
-Java语言需去除掉密钥中的BEGIN、END行，和换行符、空格。非Java语言保留原始密钥格式。
+Filter and sort
+
+Splicing: Combine the sorted parameters and their corresponding values ​​into the format of "parameter=parameter value", and connect these parameters with the & character, and the generated string is the string to be signed.
+
+Call the signature algorithm: Use the SHA256WithRSA signature function corresponding to the respective language to use the merchant's private key to sign the signature string to be signed, and perform Base64 encoding.
+Assign the generated signature to the sign parameter and concatenate it into the request parameter.
+
+Key format issue
+
+The private key used in Java language is in PKCS8 encoding format, and the private key used in non-Java language is in PKCS1 format.
+The Java language needs to remove the BEGIN, END lines, line breaks, and spaces in the key. Non-Java languages ​​retain the original key format.
+
+## Getting Started
+We recommend managing third-party dependencies from Packagist using Composer, which allows you to add new libraries and include them in your PHP projects.
+
+### Install Composer
+
+From the command-line, download Composer.
+
+### Install the library
+We recommend installing the library with Composer, a package manager for PHP:
+
+### Command Line
+
+composer require didipay/merchant-php-sdk
+After you install the library with Composer, the library is added automatically as a dependency in your project’s composer.json file. For example:
+
+  ```shell
+  {
+    "require": {
+        "didipay/merchant-php-sdk": "^${merchant-sdk-version}}"
+    }
+  }
+  ```
+To use the bindings, use Composer’s autoload. For example:
+ ```shell
+require_once('vendor/autoload.php');
+```
+You can use composer to install this package.For example:
+ ```shell
+composer require didipay/merchant-php-sdk
+```
+### Run your first request:
+Now that you have the PHP SDK installed, you can create API requests. 
+ ```php
+require_once 'vendor/autoload.php';
+
+use DidiPay\client\merchantClient;
+
+class MerchantClientTest
+{
+
+    public function test_pay_query()
+    {
+        
+        $params = ['merchant_order_id' => $merchantOrderId,
+            'pay_order_id' => $payOrderId];
+
+
+        $domain = "https://api.99pay.com.br";
+        $defaultOption = ['app_id' => $appId, 'merchant_id' => $merchantId, 'private_key' => $privateKeyContent, 'domain' => $domain];
+
+        $client = new merchantClient($defaultOption);
+        $ret = $client->payQuery($params);
+        echo $ret;
+    }
+}
+ ```
+Save the file as merchant_client_test.php. From the command-line, cd to the directory containing the file you just saved then run:
+ ```shell
+php merchant_client_test.php
+ ```
+If everything worked, the command-line shows the following response. Save these identifiers so you can use them while building your integration.
+This wraps up the quickstart. See the link below for a few different ways to process a payment for the product you just created.
+
+[Document](https://didipay.didiglobal.com/developer/docs/en/)
