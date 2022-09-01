@@ -58,5 +58,3 @@ class SignUtil
         return self::getSign($sSignData, $sPriName);
     }
 }
-
-?>

@@ -18,5 +18,3 @@ class Const_Http_Url
     const READ_TIME_OUT = 10;
 
 }
-
-?>
