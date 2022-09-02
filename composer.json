@@ -31,6 +31,34 @@
     "ext-json": "*"
   },
   "require-dev": {
+    "friendsofphp/php-cs-fixer": "^3.5.0",
+    "brainmaestro/composer-git-hooks": "^2.8",
+    "phpstan/phpstan": "^1.0",
     "phpunit/phpunit": "^9.5"
+  },
+  "extra": {
+    "hooks": {
+      "pre-commit": [
+        "composer check-style",
+        "composer phpstan",
+        "composer test"
+      ],
+      "pre-push": [
+        "composer check-style"
+      ],
+      "config": {
+        "stop-on-failure": [
+          "pre-commit",
+          "pre-push"
+        ]
+      }
+    }
+  },
+  "scripts": {
+    "post-merge": "composer install",
+    "phpstan": "phpstan analyse --memory-limit=-1",
+    "check-style": "php-cs-fixer fix --using-cache=no --diff --dry-run --allow-risky=yes --ansi",
+    "fix-style": "php-cs-fixer fix --using-cache=no --allow-risky=yes --ansi",
+    "test": "phpunit --colors"
   }
 }
