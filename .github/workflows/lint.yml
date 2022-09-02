@@ -10,14 +10,12 @@ jobs:
     - name: Install Dependencies
       run: composer install --no-progress
     - name: Run PHPStan
-      run: ./vendor/bin/phpstan analyse --no-progress
+      run: ./vendor/bin/phpstan analyse --no-progress src tests
 
   php_cs_fixer:
-    name: PHP-CS-Fxier
+    name: PHP-install
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@master
     - name: Install Dependencies
       run: composer install --no-progress
-    - name: Run PHP-CS-Fxier
-      run: composer check-style
