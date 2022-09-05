@@ -23,7 +23,7 @@ jobs:
     steps:
     - uses: actions/checkout@master
     - name: Install Dependencies
-      run: composer update --prefer-dist --no-interaction --no-suggest --prefer-${{ matrix.perfer }}
+      run: composer install && composer update --prefer-dist --no-interaction --no-suggest --prefer-${{ matrix.perfer }}
     - name: Generate key
       run: openssl genrsa -out app_private_key.pem && openssl rsa -in app_private_key.pem -pubout -out app_public_key.pem
     - name: Run PHPUnit
