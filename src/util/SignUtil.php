@@ -2,13 +2,14 @@
 
 namespace DidiPay\Util;
 
-use function PHPUnit\Framework\containsEqual;
-
 class SignUtil
 {
 
     const PRI_PRE = "-----BEGIN RSA PRIVATE KEY-----\n";
     const PRI_TAIL = "\n-----END RSA PRIVATE KEY-----";
+    const PUB_PRE = "-----BEGIN PUBLIC KEY-----\n";
+    const PUB_TAIL = "\n-----END PUBLIC KEY-----";
+    const SIGN_ALG = "sha256WithRSAEncryption";
 
     /**
      * 1. Initialize signature data
@@ -35,6 +36,7 @@ class SignUtil
     /**
      * 2. Perform base64 encoding, to obtain the signature
      * @param $sData
+     * @param $sPem
      * @return string
      */
     static function getSign($sData, $sPem)
@@ -48,7 +50,7 @@ class SignUtil
         $sPem = self::PRI_PRE . $sPem . self::PRI_TAIL;
         $sPriKey = openssl_pkey_get_private($sPem);
         $sSign = '';
-        openssl_sign($sData, $sSign, $sPriKey, 'sha256WithRSAEncryption');
+        openssl_sign($sData, $sSign, $sPriKey, self::SIGN_ALG);
         openssl_free_key($sPriKey);
         return base64_encode($sSign);
     }
@@ -56,11 +58,33 @@ class SignUtil
     /**
      * 3. Generate the final required signature
      * @param $aParams
+     * @param $sPriContent
      * @return string
      */
     public static function generateSign($aParams, $sPriContent)
     {
         $sSignData = self::prepareSignData($aParams);
         return self::getSign($sSignData, $sPriContent);
+    }
+
+    /**
+     * Verify sign
+     * @param $params
+     * @param $publicKey
+     * @param $sign
+     * @return bool
+     */
+    public static function verifySign($params, $publicKey, $sign){
+
+        if(strstr($publicKey,self::PUB_PRE)){
+            $publicKey = str_replace(self::PUB_PRE, "", $publicKey);
+        }
+        if(strstr($publicKey,self::PUB_TAIL)){
+            $publicKey = str_replace(self::PUB_TAIL, "", $publicKey);
+        }
+        $publicKey = self::PUB_PRE . $publicKey . self::PUB_TAIL;
+        $data = self::prepareSignData($params);
+
+        return openssl_verify($data,base64_decode($sign),$publicKey,self::SIGN_ALG);
     }
 }
