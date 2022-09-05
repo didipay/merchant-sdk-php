@@ -41,13 +41,9 @@ class SignUtil
      */
     static function getSign($sData, $sPem)
     {
-        if(strstr($sPem,self::PRI_PRE)){
-            $sPem = str_replace(self::PRI_PRE, "", $sPem);
+        if (!strstr($sPem, self::PRI_PRE) || !strstr($sPem, self::PRI_TAIL)) {
+            $sPem = self::PRI_PRE . $sPem . self::PRI_TAIL;
         }
-        if(strstr($sPem,self::PRI_TAIL)){
-            $sPem = str_replace(self::PRI_TAIL, "", $sPem);
-        }
-        $sPem = self::PRI_PRE . $sPem . self::PRI_TAIL;
         $sPriKey = openssl_pkey_get_private($sPem);
         $sSign = '';
         openssl_sign($sData, $sSign, $sPriKey, self::SIGN_ALG);
@@ -74,17 +70,14 @@ class SignUtil
      * @param $sign
      * @return bool
      */
-    public static function verifySign($params, $publicKey, $sign){
+    public static function verifySign($params, $publicKey, $sign)
+    {
 
-        if(strstr($publicKey,self::PUB_PRE)){
-            $publicKey = str_replace(self::PUB_PRE, "", $publicKey);
+        if (!strstr($publicKey, self::PUB_PRE) || !strstr($publicKey, self::PUB_TAIL)) {
+            $publicKey = self::PUB_PRE . $publicKey . self::PUB_TAIL;
         }
-        if(strstr($publicKey,self::PUB_TAIL)){
-            $publicKey = str_replace(self::PUB_TAIL, "", $publicKey);
-        }
-        $publicKey = self::PUB_PRE . $publicKey . self::PUB_TAIL;
         $data = self::prepareSignData($params);
 
-        return openssl_verify($data,base64_decode($sign),$publicKey,self::SIGN_ALG);
+        return openssl_verify($data, base64_decode($sign), $publicKey, self::SIGN_ALG);
     }
 }
