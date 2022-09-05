@@ -2,12 +2,14 @@
 
 namespace DidiPay\Util;
 
+use function PHPUnit\Framework\containsEqual;
+
 class SignUtil
 {
 
     const PRI_PRE = "-----BEGIN RSA PRIVATE KEY-----\n";
     const PRI_TAIL = "\n-----END RSA PRIVATE KEY-----";
-    const _sort_string = 2;
+
     /**
      * 1. Initialize signature data
      * @param $aParams
@@ -19,7 +21,7 @@ class SignUtil
         if (!is_array($aParams) || empty($aParams)) {
             return null;
         }
-        ksort($aParams, self::_sort_string);
+        ksort($aParams, SORT_STRING);
         $aSortArray = array();
         foreach ($aParams as $key => $value) {
             if (in_array($key, $aExceptKey)) {
@@ -27,8 +29,7 @@ class SignUtil
             }
             $aSortArray[] = "{$key}={$value}";
         }
-        $sSortResult = implode('&', $aSortArray);
-        return $sSortResult;
+        return implode('&', $aSortArray);
     }
 
     /**
@@ -38,13 +39,18 @@ class SignUtil
      */
     static function getSign($sData, $sPem)
     {
+        if(strstr($sPem,self::PRI_PRE)){
+            $sPem = str_replace(self::PRI_PRE, "", $sPem);
+        }
+        if(strstr($sPem,self::PRI_TAIL)){
+            $sPem = str_replace(self::PRI_TAIL, "", $sPem);
+        }
         $sPem = self::PRI_PRE . $sPem . self::PRI_TAIL;
         $sPriKey = openssl_pkey_get_private($sPem);
         $sSign = '';
         openssl_sign($sData, $sSign, $sPriKey, 'sha256WithRSAEncryption');
         openssl_free_key($sPriKey);
-        $base64 = base64_encode($sSign);
-        return $base64;
+        return base64_encode($sSign);
     }
 
     /**
@@ -52,9 +58,9 @@ class SignUtil
      * @param $aParams
      * @return string
      */
-    public static function generateSign($aParams, $sPriName = "cashier_private_key.pem")
+    public static function generateSign($aParams, $sPriContent)
     {
-        $sSignData = self::prepareSignData($aParams, $sPriName);
-        return self::getSign($sSignData, $sPriName);
+        $sSignData = self::prepareSignData($aParams);
+        return self::getSign($sSignData, $sPriContent);
     }
 }

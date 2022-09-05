@@ -5,7 +5,7 @@ namespace DidiPay\client;
 use DidiPay\Consts\Const_Http_Url;
 use DidiPay\Http\httpClient;
 use DidiPay\Util\SignUtil;
-use Exception;
+use DidiPay\Exceptions\DidipayException;
 
 class merchantClient
 {
@@ -20,6 +20,8 @@ class merchantClient
     private $domain;
     /** @var int */
     private $readTimeout;
+    /** @var bool */
+    private $isDebug;
 
     /**
      * @param array $defaultOption
@@ -28,25 +30,28 @@ class merchantClient
      *                private_key the private key string
      *                domain the domain name string default https://api.99pay.com.br
      *                read_timeout the read timeout seconds default 10
-     * @throws Exception
+     * @throws DidipayException
      */
     public function __construct($defaultOption)
     {
-        $this->checkParam($defaultOption);
+        $this->checkBasicParam($defaultOption);
         $this->appId = $defaultOption['app_id'];
         $this->merchantId = $defaultOption['merchant_id'];
         $this->privateKey = $defaultOption['private_key'];
-        $this->domain = isset($defaultOption['domain']) ? $defaultOption['domain'] : Const_Http_Url::DEFAULT_DOMAIN;
-        $this->readTimeout = isset($defaultOption['read_timeout']) ? $defaultOption['read_timeout'] : Const_Http_Url::READ_TIME_OUT;
+        $this->domain = !empty($defaultOption['domain']) && is_string($defaultOption['domain']) ? $defaultOption['domain'] : Const_Http_Url::BR_ONLINE_DOMAIN;
+        $this->readTimeout = !empty($defaultOption['read_timeout']) && is_int($defaultOption['read_timeout']) ? $defaultOption['read_timeout'] : Const_Http_Url::READ_TIME_OUT;
+        $this->isDebug = !empty($defaultOption['is_debug']) && is_bool($defaultOption['is_debug']) && $defaultOption['is_debug'];
     }
 
     /**
      * Merchant Places an Order
      * @param $params array the params for request
+     * @throws DidipayException
      * @see https://didipay.didiglobal.com/developer/docs/en/
      */
     public function prePay($params)
     {
+        $this->checkParam($params);
         $url = $this->domain . Const_Http_Url::PREPAY_URL;
 
         return $this->sendRequest($params, $url, $this->readTimeout);
@@ -55,10 +60,12 @@ class merchantClient
     /**
      * Payment Query
      * @param $params array the params for request
+     * @throws DidipayException
      * @see https://didipay.didiglobal.com/developer/docs/en/
      */
     public function payQuery($params)
     {
+        $this->checkPayQuery($params);
         $url = $this->domain . Const_Http_Url::PAY_QUERY_URL;
 
         return $this->sendRequest($params, $url, $this->readTimeout);
@@ -67,10 +74,12 @@ class merchantClient
     /**
      * Request Refund
      * @param $params array the params for request
+     * @throws DidipayException
      * @see https://didipay.didiglobal.com/developer/docs/en/
      */
     public function refund($params)
     {
+        $this->checkRefund($params);
         $url = $this->domain . Const_Http_Url::REFUND_URL;
 
         return $this->sendRequest($params, $url, $this->readTimeout);
@@ -79,10 +88,12 @@ class merchantClient
     /**
      * Refund Query
      * @param $params array the params for request
+     * @throws DidipayException
      * @see https://didipay.didiglobal.com/developer/docs/en/
      */
     public function refundQuery($params)
     {
+        $this->checkPayQuery($params);
         $url = $this->domain . Const_Http_Url::REFUND_QUERY_URL;
 
         return $this->sendRequest($params, $url, $this->readTimeout);
@@ -91,10 +102,12 @@ class merchantClient
     /**
      * Close Trade
      * @param $params array the params for request
+     * @throws DidipayException
      * @see https://didipay.didiglobal.com/developer/docs/en/
      */
     public function closeTrade($params)
     {
+        $this->checkParam($params);
         $url = $this->domain . Const_Http_Url::CLOSE_TRADE_URL;
 
         return $this->sendRequest($params, $url, $this->readTimeout);
@@ -112,19 +125,84 @@ class merchantClient
         $params['sign'] = SignUtil::generateSign($params, $this->privateKey);
         $data = json_encode($params);
 
-        return httpClient::sendMessage($url, $timeout, $data);;
+        return httpClient::sendMessage($url, "POST", $timeout, $data, $this->isDebug);
     }
 
-    private function checkParam($defaultOption)
+    /**
+     * @throws DidipayException
+     */
+    private function checkParam($params)
     {
-        if (!isset($defaultOption['app_id'])) {
-            throw new Exception("appId is empty");
+        $this->checkMerchantOrderId($params);
+
+        if (empty($params['currency']) || !is_string($params['currency'])) {
+            throw new DidipayException("currency is empty or format error");
         }
-        if (!isset($defaultOption['merchant_id'])) {
-            throw new Exception("merchantId is empty");
+
+        if (empty($params['total_amount']) || !is_string($params['total_amount'])) {
+            throw new DidipayException("totalAmount is empty or format error");
         }
-        if (!isset($defaultOption['private_key'])) {
-            throw new Exception("privateKey is empty");
+
+    }
+
+    /**
+     * @throws DidipayException
+     */
+    private function checkPayQuery($params)
+    {
+
+        $this->checkMerchantOrderId($params);
+
+        if (empty($params['pay_order_id']) || !is_string($params['pay_order_id'])) {
+            throw new DidipayException("payOrderId is empty or format error");
+        }
+    }
+
+    /**
+     * @throws DidipayException
+     */
+    private function checkRefund($params)
+    {
+
+        $this->checkMerchantOrderId($params);
+
+        if (empty($params['pay_order_id']) || !is_string($params['pay_order_id'])) {
+            throw new DidipayException("payOrderId is empty or format error");
+        }
+
+        if (empty($params['merchant_refund_id']) || !is_string($params['merchant_refund_id'])) {
+            throw new DidipayException("merchantRefundId is empty or format error");
+        }
+
+        if (empty($params['amount']) || !is_string($params['amount'])) {
+            throw new DidipayException("amount is empty or format error");
+        }
+
+    }
+
+    /**
+     * @throws DidipayException
+     */
+    private function checkMerchantOrderId($params)
+    {
+        if (empty($params['merchant_order_id']) || !is_string($params['merchant_order_id'])) {
+            throw new DidipayException("merchantOrderId is empty or format error");
+        }
+    }
+
+    /**
+     * @throws DidipayException
+     */
+    private function checkBasicParam($defaultOption)
+    {
+        if (empty($defaultOption['app_id']) || !is_string($defaultOption['app_id'])) {
+            throw new DidipayException("appId is empty or format error");
+        }
+        if (empty($defaultOption['merchant_id']) || !is_string($defaultOption['merchant_id'])) {
+            throw new DidipayException("merchantId is empty or format error");
+        }
+        if (empty($defaultOption['private_key']) || !is_string($defaultOption['private_key'])) {
+            throw new DidipayException("privateKey is empty or format error");
         }
     }
 
