@@ -2,8 +2,6 @@
 
 namespace Didipay\Tests;
 
-require_once('../vendor/autoload.php');
-
 use DidiPay\Util\SignUtil;
 use PHPUnit\Framework\TestCase;
 
