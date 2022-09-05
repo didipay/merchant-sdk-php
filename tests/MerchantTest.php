@@ -14,10 +14,11 @@ class MerchantTest extends TestCase
     {
         $params = ['merchant_order_id' => '123',
             'pay_order_id' => '123456'];
-        $privateKeyFile = "../app_private_key.pem";
+        $privateKeyFile = "/home/runner/work/merchant-sdk-php/merchant-sdk-php/app_private_key.pem";
         $privateKeyContent = $this->readFile($privateKeyFile);
+        echo $privateKeyContent;
         $sign = SignUtil::generateSign($params, $privateKeyContent);
-        $publicKeyFile = "../app_public_key.pem";
+        $publicKeyFile = "/home/runner/work/merchant-sdk-php/merchant-sdk-php/app_public_key.pem";
         $publicKeyContent = $this->readFile($publicKeyFile);
         $isVerify = SignUtil::verifySign($params,$publicKeyContent,$sign);
         $this->assertSame($isVerify,1);
