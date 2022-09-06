@@ -3,7 +3,7 @@
   "name": "didipay/merchant-php-sdk",
   "type": "library",
   "homepage": "https://didipay.didiglobal.com/developer/docs/",
-  "license": "MIT",
+  "license": "Apache-2.0",
   "authors": [
     {
       "name": "fangxiaohai",
