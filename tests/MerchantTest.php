@@ -82,7 +82,7 @@ class MerchantTest extends TestCase
     {
         // 设置入参$params和秘钥$pkey
         $params = ['merchant_order_id'=>'merchantOrderId',
-            'pay_order_id'=>'payOrderId','merchant_refund_id'=>'merchantRefundId'];
+            'pay_order_id'=>'payOrderId','merchant_refund_id'=>'merchantRefundId','amount'=>'1200'];
 
 
         $privateKeyFile = self::PRI_KEY_PATH;

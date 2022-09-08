@@ -107,7 +107,7 @@ class merchantClient
      */
     public function closeTrade($params)
     {
-        $this->checkParam($params);
+        $this->checkMerchantOrderId($params);
         $url = $this->domain . Const_Http_Url::CLOSE_TRADE_URL;
 
         return $this->sendRequest($params, $url, $this->readTimeout);
