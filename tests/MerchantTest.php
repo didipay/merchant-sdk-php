@@ -50,8 +50,8 @@ class MerchantTest extends TestCase
         $ret = $client->payQuery($params);
         $response = json_decode($ret,null,512,1);
         echo $ret;
-        $this->assertSame('200', $response['returnNo']);
-        $this->assertSame('success', $response['returnMsg']);
+        $this->assertSame('200', $response['return_no']);
+        $this->assertSame('success', $response['return_msg']);
 
     }
 
@@ -71,8 +71,8 @@ class MerchantTest extends TestCase
         $client = new merchantClient($defaultOption);
         $ret = $client->prePay($params);
         $response = json_decode($ret,null,512,1);
-        $this->assertSame('200', $response['returnNo']);
-        $this->assertSame('success', $response['returnMsg']);
+        $this->assertSame('200', $response['return_no']);
+        $this->assertSame('success', $response['return_msg']);
     }
 
     /**
@@ -93,8 +93,8 @@ class MerchantTest extends TestCase
         $client = new merchantClient($defaultOption);
         $ret = $client->refund($params);
         $response = json_decode($ret,null,512,1);
-        $this->assertSame('200', $response['returnNo']);
-        $this->assertSame('success', $response['returnMsg']);
+        $this->assertSame('200', $response['return_no']);
+        $this->assertSame('success', $response['return_msg']);
     }
 
     /**
@@ -113,8 +113,8 @@ class MerchantTest extends TestCase
         $client = new merchantClient($defaultOption);
         $ret = $client->refundQuery($params);
         $response = json_decode($ret,null,512,1);
-        $this->assertSame('200', $response['returnNo']);
-        $this->assertSame('success', $response['returnMsg']);
+        $this->assertSame('200', $response['return_no']);
+        $this->assertSame('success', $response['return_msg']);
     }
 
     /**
@@ -132,8 +132,8 @@ class MerchantTest extends TestCase
         $client = new merchantClient($defaultOption);
         $ret = $client->closeTrade($params);
         $response = json_decode($ret,null,512,1);
-        $this->assertSame('200', $response['returnNo']);
-        $this->assertSame('success', $response['returnMsg']);
+        $this->assertSame('200', $response['return_no']);
+        $this->assertSame('success', $response['return_msg']);
     }
 
     private function readFile($filePath)
