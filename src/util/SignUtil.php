@@ -47,7 +47,9 @@ class SignUtil
         $sPriKey = openssl_pkey_get_private($sPem);
         $sSign = '';
         openssl_sign($sData, $sSign, $sPriKey, self::SIGN_ALG);
-        openssl_free_key($sPriKey);
+        if (PHP_VERSION_ID < 80000) {
+            openssl_free_key($sPriKey);
+        }
         return base64_encode($sSign);
     }
 
