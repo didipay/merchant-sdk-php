@@ -2,7 +2,7 @@
 
 namespace Didipay\Tests;
 
-require_once('src/util/SignUtil.php');
+require_once('vendor/autoload.php');
 
 use DidiPay\client\merchantClient;
 use DidiPay\Exceptions\DidipayException;
