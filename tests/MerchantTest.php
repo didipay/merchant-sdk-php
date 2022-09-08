@@ -4,6 +4,9 @@ namespace Didipay\Tests;
 
 require_once('src/util/SignUtil.php');
 require_once('src/consts/Const_Http_Url.php');
+require_once('src/client/merchantClient.php');
+require_once('src/exceptions/DidipayException.php');
+require_once('src/http/httpClient.php');
 
 use DidiPay\client\merchantClient;
 use DidiPay\Exceptions\DidipayException;
