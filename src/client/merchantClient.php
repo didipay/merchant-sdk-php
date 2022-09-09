@@ -135,11 +135,11 @@ class merchantClient
     {
         $this->checkMerchantOrderId($params);
 
-        if (empty($params['currency']) || !is_string($params['currency'])) {
+        if (!is_string($params['currency']) || empty(trim($params['currency']))) {
             throw new DidipayException("currency is empty or format error");
         }
 
-        if (empty($params['total_amount']) || !is_string($params['total_amount'])) {
+        if (!is_string($params['total_amount']) || empty($params['total_amount'])) {
             throw new DidipayException("totalAmount is empty or format error");
         }
 
@@ -153,7 +153,7 @@ class merchantClient
 
         $this->checkMerchantOrderId($params);
 
-        if (empty($params['pay_order_id']) || !is_string($params['pay_order_id'])) {
+        if (!is_string($params['pay_order_id']) || empty($params['pay_order_id'])) {
             throw new DidipayException("payOrderId is empty or format error");
         }
     }
@@ -166,15 +166,15 @@ class merchantClient
 
         $this->checkMerchantOrderId($params);
 
-        if (empty($params['pay_order_id']) || !is_string($params['pay_order_id'])) {
+        if (!is_string($params['pay_order_id']) || empty(trim($params['pay_order_id']))) {
             throw new DidipayException("payOrderId is empty or format error");
         }
 
-        if (empty($params['merchant_refund_id']) || !is_string($params['merchant_refund_id'])) {
+        if (!is_string($params['merchant_refund_id']) || empty(trim($params['merchant_refund_id']))) {
             throw new DidipayException("merchantRefundId is empty or format error");
         }
 
-        if (empty($params['amount']) || !is_string($params['amount'])) {
+        if (!is_string($params['amount']) || empty(trim($params['amount']))) {
             throw new DidipayException("amount is empty or format error");
         }
 
@@ -185,7 +185,7 @@ class merchantClient
      */
     private function checkMerchantOrderId($params)
     {
-        if (empty($params['merchant_order_id']) || !is_string($params['merchant_order_id'])) {
+        if (!is_string($params['merchant_order_id']) || empty(trim($params['merchant_order_id']))) {
             throw new DidipayException("merchantOrderId is empty or format error");
         }
     }
@@ -195,13 +195,13 @@ class merchantClient
      */
     private function checkBasicParam($defaultOption)
     {
-        if (empty($defaultOption['app_id']) || !is_string($defaultOption['app_id'])) {
+        if (!is_string($defaultOption['app_id']) || empty(trim($defaultOption['app_id']))) {
             throw new DidipayException("appId is empty or format error");
         }
-        if (empty($defaultOption['merchant_id']) || !is_string($defaultOption['merchant_id'])) {
+        if (!is_string($defaultOption['merchant_id']) || empty(trim($defaultOption['merchant_id']))) {
             throw new DidipayException("merchantId is empty or format error");
         }
-        if (empty($defaultOption['private_key']) || !is_string($defaultOption['private_key'])) {
+        if (!is_string($defaultOption['private_key']) || empty(trim($defaultOption['private_key']))) {
             throw new DidipayException("privateKey is empty or format error");
         }
     }

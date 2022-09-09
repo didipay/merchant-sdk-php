@@ -28,3 +28,7 @@ jobs:
       run: openssl genrsa -out app_private_key.pem && openssl rsa -in app_private_key.pem -pubout -out app_public_key.pem && pwd
     - name: Run PHPUnit
       run: ./vendor/bin/phpunit tests/MerchantTest.php
+    - name: Upload coverage to codecov
+      uses: codecov/codecov-action@v1
+      with:
+        flags: unit
