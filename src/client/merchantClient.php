@@ -139,7 +139,7 @@ class merchantClient
             throw new DidipayException("currency is empty or format error");
         }
 
-        if (!is_string($params['total_amount']) || empty($params['total_amount'])) {
+        if (!is_string($params['total_amount']) || empty(trim($params['total_amount']))) {
             throw new DidipayException("totalAmount is empty or format error");
         }
 
@@ -157,7 +157,7 @@ class merchantClient
 
         $this->checkMerchantOrderId($params);
 
-        if (!is_string($params['pay_order_id']) || empty($params['pay_order_id'])) {
+        if (!is_string($params['pay_order_id']) || empty(trim($params['pay_order_id']))) {
             throw new DidipayException("payOrderId is empty or format error");
         }
     }
