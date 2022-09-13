@@ -143,6 +143,10 @@ class merchantClient
             throw new DidipayException("totalAmount is empty or format error");
         }
 
+        if(strpos($params['total_amount'],'.') !== false){
+            throw new DidipayException("totalAmount contains .");
+        }
+
     }
 
     /**
@@ -176,6 +180,10 @@ class merchantClient
 
         if (!is_string($params['amount']) || empty(trim($params['amount']))) {
             throw new DidipayException("amount is empty or format error");
+        }
+
+        if(strpos($params['amount'],'.') !== false){
+            throw new DidipayException("amount contains .");
         }
 
     }
