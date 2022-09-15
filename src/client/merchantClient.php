@@ -147,6 +147,10 @@ class merchantClient
             throw new DidipayException("totalAmount contains .");
         }
 
+        if (!is_string($params['notify_url']) || empty(trim($params['notify_url']))) {
+            throw new DidipayException("notifyUrl is empty or format error");
+        }
+
     }
 
     /**
