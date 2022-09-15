@@ -39,7 +39,7 @@ class MerchantTest extends TestCase
     public function test_pay_query(){
 
         $params = ['merchant_order_id' => 'merchantOrderId',
-            'pay_order_id' => 'payOrderId'];
+            'pay_order_id' => 'payOrderId','notify_url'=>'https://www.didiglobal.com'];
 
         $privateKeyFile = self::PRI_KEY_PATH;
         $privateKeyContent = $this->readFile($privateKeyFile);
