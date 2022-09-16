@@ -24,7 +24,7 @@ Assign the generated signature to the sign parameter and concatenate it into the
 
 Key format issue
 
-The private key used in Java language is in PKCS8 encoding format, and the private key used in non-Java language is in PKCS1 format.
+The private key used in this project is in PKCS1 format.
 The Java language needs to remove the BEGIN, END lines, line breaks, and spaces in the key. Non-Java languages ​​retain the original key format.
 
 ## Getting Started
