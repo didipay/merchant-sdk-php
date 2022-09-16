@@ -29,17 +29,18 @@ class MerchantTest extends TestCase
         $sign = SignUtil::generateSign($params, $privateKeyContent);
         $publicKeyFile = self::PUB_KEY_PATH;
         $publicKeyContent = $this->readFile($publicKeyFile);
-        $isVerify = SignUtil::verifySign($params,$publicKeyContent,$sign);
-        $this->assertSame($isVerify,1);
+        $isVerify = SignUtil::verifySign($params, $publicKeyContent, $sign);
+        $this->assertSame($isVerify, 1);
     }
 
     /**
      * @throws DidipayException
      */
-    public function test_pay_query(){
+    public function test_pay_query()
+    {
 
         $params = ['merchant_order_id' => 'merchantOrderId',
-            'pay_order_id' => 'payOrderId','notify_url'=>'https://www.didiglobal.com'];
+            'pay_order_id' => 'payOrderId', 'notify_url' => 'https://www.didiglobal.com'];
 
         $privateKeyFile = self::PRI_KEY_PATH;
         $privateKeyContent = $this->readFile($privateKeyFile);
@@ -48,7 +49,7 @@ class MerchantTest extends TestCase
 
         $client = new merchantClient($defaultOption);
         $ret = $client->payQuery($params);
-        $response = json_decode($ret,null,512,1);
+        $response = json_decode($ret, null, 512, 1);
         echo $ret;
         $this->assertSame('200', $response['return_no']);
         $this->assertSame('success', $response['return_msg']);
@@ -61,7 +62,7 @@ class MerchantTest extends TestCase
     public function test_pre_pay()
     {
         $params = ['merchant_order_id' => 'merchantOrderId',
-            'pay_order_id' => 'payOrderId','currency'=>'BRL','total_amount'=>'1200'];
+            'pay_order_id' => 'payOrderId', 'notify_url' => 'https://www.didiglobal.com', 'currency' => 'BRL', 'total_amount' => '1200'];
 
         $privateKeyFile = self::PRI_KEY_PATH;
         $privateKeyContent = $this->readFile($privateKeyFile);
@@ -70,7 +71,7 @@ class MerchantTest extends TestCase
 
         $client = new merchantClient($defaultOption);
         $ret = $client->prePay($params);
-        $response = json_decode($ret,null,512,1);
+        $response = json_decode($ret, null, 512, 1);
         $this->assertSame('200', $response['return_no']);
         $this->assertSame('success', $response['return_msg']);
     }
@@ -81,8 +82,8 @@ class MerchantTest extends TestCase
     public function test_refund()
     {
         // 设置入参$params和秘钥$pkey
-        $params = ['merchant_order_id'=>'merchantOrderId',
-            'pay_order_id'=>'payOrderId','merchant_refund_id'=>'merchantRefundId','amount'=>'1200'];
+        $params = ['merchant_order_id' => 'merchantOrderId',
+            'pay_order_id' => 'payOrderId', 'merchant_refund_id' => 'merchantRefundId', 'amount' => '1200'];
 
 
         $privateKeyFile = self::PRI_KEY_PATH;
@@ -92,7 +93,7 @@ class MerchantTest extends TestCase
 
         $client = new merchantClient($defaultOption);
         $ret = $client->refund($params);
-        $response = json_decode($ret,null,512,1);
+        $response = json_decode($ret, null, 512, 1);
         $this->assertSame('200', $response['return_no']);
         $this->assertSame('success', $response['return_msg']);
     }
@@ -112,7 +113,7 @@ class MerchantTest extends TestCase
 
         $client = new merchantClient($defaultOption);
         $ret = $client->refundQuery($params);
-        $response = json_decode($ret,null,512,1);
+        $response = json_decode($ret, null, 512, 1);
         $this->assertSame('200', $response['return_no']);
         $this->assertSame('success', $response['return_msg']);
     }
@@ -122,7 +123,7 @@ class MerchantTest extends TestCase
      */
     public function test_close_trade()
     {
-        $params = ['merchant_order_id'=>'merchantOrderId'];
+        $params = ['merchant_order_id' => 'merchantOrderId'];
 
         $privateKeyFile = self::PRI_KEY_PATH;
         $privateKeyContent = $this->readFile($privateKeyFile);
@@ -131,7 +132,7 @@ class MerchantTest extends TestCase
 
         $client = new merchantClient($defaultOption);
         $ret = $client->closeTrade($params);
-        $response = json_decode($ret,null,512,1);
+        $response = json_decode($ret, null, 512, 1);
         $this->assertSame('200', $response['return_no']);
         $this->assertSame('success', $response['return_msg']);
     }
